@@ -1,0 +1,32 @@
+<img src="$@$@o@$@$" width="3"></img> #
+
+<p i u>Maybe it's not that hard.</p> #
+
+<h em color="blue">God, this project seems so hard!</h> #
+
+
+<div 
+     w="10" 
+     h="5" 
+     direction="row" 
+     align-items="center" 
+     justify-content="end"
+     i u
+     >
+        <p>Upper</p>
+        <p>Middle</p>
+        <p>Lower</p>
+</div> #
+
+
+<div color="white">
+    <div color="red">
+        <p>A</p>
+        <p color="green">B</p>
+    </div>
+    <div em>
+        <p color="red">C</p>
+        <p>D</p>
+    </div>
+    <p i>E</p>
+</div>#
