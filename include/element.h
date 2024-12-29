@@ -56,7 +56,7 @@ struct paragragh_string
 };
 struct image_string
 {
-    char s[55];
+    char s[550];
     struct image element;
     int id,width,height;
 };

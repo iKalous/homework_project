@@ -6,6 +6,7 @@
 #include "element.h"
 #include "minmax.h"
 
+int flag[15][55]; // = 1 starter = 2 ender
 struct node map[15][55];
 struct heading_string nH[110];
 struct paragragh_string nP[110];
@@ -32,7 +33,7 @@ struct div_string read_div(int divp)
     for(int i = 1;i <= 3; ++ i) ch = getchar();
     for(int fg = 0,L;ch != '>';ch = getchar())
     {
-        for(;ch == ' ' || ch == '\n';ch = getchar());
+        for(;ch == ' ' || ch == '\n' || ch == '\t';ch = getchar());
         if(ch == 'w')
         {
             for(;ch != '"';ch = getchar());
@@ -46,7 +47,7 @@ struct div_string read_div(int divp)
         if(ch == 'd')
         {
             for(int i = 1;i <= 8; ++ i) ch = getchar();
-            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '=' || ch == '"';ch = getchar());
+            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '\t' || ch == '=' || ch == '"';ch = getchar());
             if(ch == 'r') 
                 cur.element.direction = 0, L = 2;
             else
@@ -57,7 +58,7 @@ struct div_string read_div(int divp)
         if(ch == 'a')
         {
             for(int i = 1;i <= 10; ++ i) ch = getchar();
-            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '=' || ch == '"';ch = getchar());
+            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '\t' || ch == '=' || ch == '"';ch = getchar());
             if(ch == 's')
             {
                 ch = getchar();
@@ -76,7 +77,7 @@ struct div_string read_div(int divp)
         if(ch == 'j')
         {
             for(int i = 1;i <= 14; ++ i) ch = getchar();
-            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '=' || ch == '"';ch = getchar());
+            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '\t' || ch == '=' || ch == '"';ch = getchar());
             if(ch == 's')
             {
                 ch = getchar();
@@ -95,13 +96,15 @@ struct div_string read_div(int divp)
         if(ch == 'c')
         {
             for(int i = 1;i <= 4; ++ i) ch = getchar();
-            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '=' || ch == '"';ch = getchar());
+            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '\t' || ch == '=' || ch == '"';ch = getchar());
             if(ch == 'r')
-                L = 2, cur.element.color = 0;
+                L = 2, cur.element.color = 1;
             if(ch == 'b')
-                L = 3, cur.element.color = 1;
+                L = 3, cur.element.color = 2;
             if(ch == 'g')
-                L = 4, cur.element.color = 2;
+                L = 4, cur.element.color = 3;
+            if(ch == 'w')
+                L = 4, cur.element.color = 0;
             for(int i = 1;i <=  L; ++ i) ch = getchar();
             for(;ch != '"';ch = getchar());
         }
@@ -128,13 +131,15 @@ struct heading_string read_heading(int hp)
         if(ch == 'c')
         {
             for(int i = 1;i <= 4; ++ i) ch = getchar();
-            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '=' || ch == '"';ch = getchar());
+            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '\t' || ch == '=' || ch == '"';ch = getchar());
             if(ch == 'r')
-                L = 2, cur.element.color = 0;
+                L = 2, cur.element.color = 1;
             if(ch == 'b')
-                L = 3, cur.element.color = 1;
+                L = 3, cur.element.color = 2;
             if(ch == 'g')
-                L = 4, cur.element.color = 2;
+                L = 4, cur.element.color = 3;
+            if(ch == 'w')
+                L = 4, cur.element.color = 0;
             for(int i = 1;i <=  L; ++ i) ch = getchar();
             for(;ch != '"';ch = getchar());
         }
@@ -149,8 +154,8 @@ struct heading_string read_heading(int hp)
     for(ch = getchar();ch != '<';ch = getchar())
     {
         cur.s[len++] = ch;
-        if(cur.s[len] >= 'a' && cur.s[len] <= 'z')
-            cur.s[len] = cur.s[len] - 'a' + 'A';
+        if(cur.s[len - 1] >= 'a' && cur.s[len - 1] <= 'z')
+            cur.s[len - 1] = cur.s[len - 1] - 'a' + 'A';
     } cur.width = len;
     for(;ch != '>';ch = getchar());
     return cur;
@@ -164,17 +169,19 @@ struct paragragh_string read_paragragh(int pp)
     // get elements
     for(ch = getchar();ch != '>';ch = getchar())
     {
-        for(;ch == ' ' || ch == '\n';ch = getchar());
+        for(;ch == ' ' || ch == '\n' || ch == '\t';ch = getchar());
         if(ch == 'c')
         {
             for(int i = 1;i <= 4; ++ i) ch = getchar();
-            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '=' || ch == '"';ch = getchar());
+            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '\t' || ch == '=' || ch == '"';ch = getchar());
             if(ch == 'r')
-                L = 2, cur.element.color = 0;
+                L = 2, cur.element.color = 1;
             if(ch == 'b')
-                L = 3, cur.element.color = 1;
+                L = 3, cur.element.color = 2;
             if(ch == 'g')
-                L = 4, cur.element.color = 2;
+                L = 4, cur.element.color = 3;
+            if(ch == 'w')
+                L = 4, cur.element.color = 0;
             for(int i = 1;i <=  L; ++ i) ch = getchar();
             for(;ch != '"';ch = getchar());
         }
@@ -199,7 +206,7 @@ struct image_string read_image(int ip)
     cur.height = 1, cur.width = 0, cur.id = ip;
     for(ch = getchar();ch != '>' && ch != '<';ch = getchar())
     {
-        for(;ch == ' ' || ch == '\n' || ch == '"';ch = getchar());
+        for(;ch == ' ' || ch == '\n' || ch == '\t' || ch == '"';ch = getchar());
         if(ch == 's')
         {
             for(;ch != '"';ch = getchar());
@@ -227,23 +234,17 @@ int read(int divp)
     struct image_string curi;
     curd = nD[divp];
     curd.id = divp; curd.tot = 0;
-    // curd.element = (struct div){ 0,0,0,0,0,0,0,0,0 };
 
-    for(;ch != /*EOF*/ '#';ch = getchar())
+    for(;ch != EOF;ch = getchar())
     {
-        // for(;ch == ' ' || ch == '\n' || ch == '"';ch = getchar());
         if(ch == '<')
         {
-            for(ch = getchar();ch == ' ' || ch == '\n';ch = getchar());
+            for(ch = getchar();ch == ' ' || ch == '\n' || ch == '\t';ch = getchar());
             if(ch == '/') 
             { //
                 char kind = getchar();
                 for(ch = getchar();ch != '>';ch = getchar());
                 nD[divp] = curd, nD[divp].id = divp;
-                // if(nD[divp].element.direction == 1)
-                //     nD[divp].element.height = mxheight, nD[divp].element.width = totwidth;
-                // else
-                //     nD[divp].element.height = totheight, nD[divp].element.width = mxwidth;
                 if(nD[divp].element.height == 0)
                     nD[divp].element.height = nD[divp].element.direction == 1 ? mxheight : totheight;
                 if(nD[divp].element.width == 0)
@@ -252,10 +253,9 @@ int read(int divp)
             }
             else
             {
-                for(;ch == ' ' || ch == '\n';ch = getchar());
+                for(;ch == ' ' || ch == '\n' || ch == '\t';ch = getchar());
                 if(num(ch) == 0)
                 {
-                    // puts("hey div");
                     nD[++totd] = read_div(totd); int now = totd; read(totd);
                     curd.stk[++ curd.tot] = (struct kind){ 0,now };
                     mxheight = max(mxheight,nD[now].element.height);
@@ -265,7 +265,6 @@ int read(int divp)
                 }
                 if(num(ch) == 1)
                 {
-                    // puts("hey heading");
                     nH[++toth] = read_heading(toth); int now = toth;
                     curd.stk[++ curd.tot] = (struct kind){ 1,now };
                     mxheight = max(mxheight,nH[now].height);
@@ -275,7 +274,6 @@ int read(int divp)
                 }
                 if(num(ch) == 2)
                 {
-                    // puts("hey paragragh");
                     nP[++totp] = read_paragragh(totp); int now = totp;
                     curd.stk[++ curd.tot] = (struct kind){ 2,now };
                     mxheight = max(mxheight,nP[now].height);
@@ -285,7 +283,6 @@ int read(int divp)
                 }
                 if(num(ch) == 3)
                 {
-                    // puts("hey image");
                     nI[++toti] = read_image(toti); int now = toti;
                     curd.stk[++ curd.tot] = (struct kind){ 3,now };
                     mxheight = max(mxheight,nI[now].height);
@@ -303,70 +300,50 @@ int read(int divp)
         nD[divp].element.width = nD[divp].element.direction == 1 ? totwidth : mxwidth;
 }
 
-// void print(int divp)
-// {
-//     printf("div : %d---------------------------\n",divp);
-//     for(int i = 1;i <= nD[divp].tot; ++ i)
-//         printf("%d %d\n",nD[divp].stk[i].kind,nD[divp].stk[i].id);
-
-//     printf("width :%d\n",nD[divp].element.width);
-//     printf("height :%d\n",nD[divp].element.height);
-//     printf("direction :%d\n",nD[divp].element.direction);
-//     printf("align_items :%d\n",nD[divp].element.align_items);
-//     printf("justify_items :%d\n",nD[divp].element.justify_items);
-//     printf("color :%d\n",nD[divp].element.color);
-//     printf("em :%d\n",nD[divp].element.em);
-//     printf("i :%d\n",nD[divp].element.i);
-//     printf("u :%d\n",nD[divp].element.u);
-//     for(int i = 1;i <= nD[divp].tot; ++ i)
-//     {
-//         int opt = nD[divp].stk[i].kind,id = nD[divp].stk[i].id;
-//         if(opt == 0)
-//             print(id);
-//         if(opt == 1)
-//         {
-//             puts("******************************");
-//             for(int i = 0;i < nH[id].width; ++ i)
-//                 printf("%c",nH[id].s[i]);
-//             puts("");
-//             printf("color :%d\n",nH[id].element.color);
-//             printf("width :%d\n",nH[id].width);
-//             printf("em :%d\n",nH[id].element.em);
-//             printf("i :%d\n",nH[id].element.i);
-//             printf("u :%d\n",nH[id].element.u);
-//         }
-//         if(opt == 2)
-//         {
-//             puts("******************************");
-//             for(int i = 0;i < nP[id].width; ++ i)
-//                 printf("%c",nP[id].s[i]);
-//             puts("");
-//             printf("color :%d\n",nP[id].element.color);
-//             printf("width :%d\n",nP[id].width);
-//             printf("em :%d\n",nP[id].element.em);
-//             printf("i :%d\n",nP[id].element.i);
-//             printf("u :%d\n",nP[id].element.u);
-//         }
-//         if(opt == 3)
-//         {
-//             puts("******************************");
-//             for(int i = 0;i < nI[id].height; ++ i)
-//             {
-//                 for(int j = 0;j < nI[id].width; ++ j)
-//                     printf("%c",nI[id].s[i * nI[id].width + j]);
-//                 puts("");
-//             }
-//             puts("");
-//         }
-//     }
-// }
-
 int get(int H,int h,int tot,int opt)
 {
     if(opt == 0) return 0;
     if(opt == 1 || opt == 3) return (H - h) / (tot + 1);
     if(opt == 2) return (H - h);
 }
+
+void pushdown_div(int divp,int p)
+{
+    struct div cur = nD[divp].element;
+    if(nD[p].element.color == 0)
+        nD[p].element.color = cur.color;
+    if(nD[p].element.em == 0)
+        nD[p].element.em = cur.em;
+    if(nD[p].element.i == 0)
+        nD[p].element.i = cur.i;
+    if(nD[p].element.u == 0)
+        nD[p].element.u = cur.u;
+}
+void pushdown_heading(int divp,int p)
+{
+    struct div cur = nD[divp].element;
+    if(nH[p].element.color == 0)
+        nH[p].element.color = cur.color;
+    if(nH[p].element.em == 0)
+        nH[p].element.em = cur.em;
+    if(nH[p].element.i == 0)
+        nH[p].element.i = cur.i;
+    if(nH[p].element.u == 0)
+        nH[p].element.u = cur.u;
+}
+void pushdown_paragragh(int divp,int p)
+{
+    struct div cur = nD[divp].element;
+    if(nP[p].element.color == 0)
+        nP[p].element.color = cur.color;
+    if(nP[p].element.em == 0)
+        nP[p].element.em = cur.em;
+    if(nP[p].element.i == 0)
+        nP[p].element.i = cur.i;
+    if(nP[p].element.u == 0)
+        nP[p].element.u = cur.u;
+}
+void pushdown_image() {}
 
 void draw(int divp,int x1,int y1,int x2,int y2)
 {
@@ -415,11 +392,16 @@ void draw(int divp,int x1,int y1,int x2,int y2)
             if(opt == 0)
             {
                 dy = get(curd.element.width,nD[id].element.width,1,justify);
+                pushdown_div(divp,id);
                 draw(curd.stk[i].id,x1 + dx,y1 + dy,x1 + dx + nD[id].element.height - 1,y1 + dy + nD[id].element.width - 1);
+                dx += nD[id].element.height;
             }
             if(opt == 1)
             {
                 dy = get(curd.element.width,nH[id].width,1,justify);
+                pushdown_heading(divp,id);
+                flag[dx + x1][dy + y1 + 0] += 1;
+                flag[dx + x1][dy + y1 + nH[id].width - 1] += 2;
                 for(int i = 0;i < nH[id].width; ++ i)
                     map[dx + x1][dy + y1 + i].h = nH[id].element,
                     map[dx + x1][dy + y1 + i].h.ch = nH[id].s[i],
@@ -429,6 +411,9 @@ void draw(int divp,int x1,int y1,int x2,int y2)
             if(opt == 2)
             {
                 dy = get(curd.element.width,nP[id].width,1,justify);
+                pushdown_paragragh(divp,id);
+                flag[dx + x1][dy + y1 + 0] += 1;
+                flag[dx + x1][dy + y1 + nP[id].width - 1] += 2;
                 for(int i = 0;i < nP[id].width; ++ i)
                     map[dx + x1][dy + y1 + i].p = nP[id].element,
                     map[dx + x1][dy + y1 + i].p.ch = nP[id].s[i],
@@ -438,6 +423,7 @@ void draw(int divp,int x1,int y1,int x2,int y2)
             if(opt == 3)
             {
                 dy = get(curd.element.width,nI[id].width,1,justify);
+                pushdown_image(divp,id);
                 for(int i = 0;i < nI[id].height; ++ i)
                     for(int j = 0;j < nI[id].width; ++ j)
                         map[dx + x1 + i][dy + y1 + j].img = nI[id].element,
@@ -456,12 +442,16 @@ void draw(int divp,int x1,int y1,int x2,int y2)
             if(opt == 0)
             {
                 dx = get(curd.element.height,nD[id].element.height,1,align);
+                pushdown_div(divp,id);
                 draw(curd.stk[i].id,x1 + dx,y1 + dy,x1 + dx + nD[id].element.height - 1,y1 + dy + nD[id].element.width - 1);
                 dy += nD[id].element.width;
             }
             if(opt == 1)
             {
-                dx = get(curd.element.height,1,1,justify);
+                dx = get(curd.element.height,1,1,align);
+                pushdown_heading(divp,id);
+                flag[dx + x1][dy + y1 + 0] += 1;
+                flag[dx + x1][dy + y1 + nH[id].width - 1] += 2;
                 for(int i = 0;i < nH[id].width; ++ i)
                     map[dx + x1][dy + y1 + i].h = nH[id].element,
                     map[dx + x1][dy + y1 + i].h.ch = nH[id].s[i],
@@ -470,7 +460,10 @@ void draw(int divp,int x1,int y1,int x2,int y2)
             }
             if(opt == 2)
             {
-                dx = get(curd.element.height,1,1,justify);
+                dx = get(curd.element.height,1,1,align);
+                pushdown_paragragh(divp,id);
+                flag[dx + x1][dy + y1 + 0] += 1;
+                flag[dx + x1][dy + y1 + nP[id].width - 1] += 2;
                 for(int i = 0;i < nP[id].width; ++ i)
                     map[dx + x1][dy + y1 + i].p = nP[id].element,
                     map[dx + x1][dy + y1 + i].p.ch = nP[id].s[i],
@@ -479,7 +472,8 @@ void draw(int divp,int x1,int y1,int x2,int y2)
             }
             if(opt == 3)
             {
-                dx = get(curd.element.height,nI[id].height,1,justify);
+                dx = get(curd.element.height,nI[id].height,1,align);
+                pushdown_image(divp,id);
                 for(int i = 0;i < nI[id].height; ++ i)
                     for(int j = 0;j < nI[id].width; ++ j)
                         map[dx + x1 + i][dy + y1 + j].img = nI[id].element,
@@ -487,22 +481,74 @@ void draw(int divp,int x1,int y1,int x2,int y2)
                         map[dx + x1 + i][dy + y1 + j].id = 3;
                 dy += nI[id].width;
             }
-            dx += px;
+            dy += py;
         }
     }
+}
+
+int check = 0;
+
+void print_heading(struct heading cur)
+{
+    if(cur.color == 1) printf("\033[31m"), check = 1;
+    if(cur.color == 2) printf("\033[34m"), check = 1;
+    if(cur.color == 3) printf("\033[32m"), check = 1;
+    if(cur.em == 1) printf("\033[1m"), check = 1;
+    if(cur.i == 1) printf("\033[3m"), check = 1;
+    if(cur.u == 1) printf("\033[4m"), check = 1;
+    printf("%c",cur.ch);
+}
+void print_paragragh(struct paragragh cur)
+{
+    if(cur.color == 1) printf("\033[31m"), check = 1;
+    if(cur.color == 2) printf("\033[34m"), check = 1;
+    if(cur.color == 3) printf("\033[32m"), check = 1;
+    if(cur.em == 1) printf("\033[1m"), check = 1;
+    if(cur.i == 1) printf("\033[3m"), check = 1;
+    if(cur.u == 1) printf("\033[4m"), check = 1;
+    printf("%c",cur.ch);
+}
+void print_image(struct image cur)
+{
+    printf("%c",cur.ch);
 }
 
 void print()
 {
     for(int i = 0;i < 10; ++ i)
     {
+        check = 0;
         for(int j = 0;j < 50; ++ j)
         {
             int id = map[i][j].id;
             if(id == 0) printf(" ");
-            if(id == 1) printf("%c",map[i][j].h.ch);
-            if(id == 2) printf("%c",map[i][j].p.ch);
-            if(id == 3) printf("%c",map[i][j].img.ch);
+            if(id == 1) 
+            {
+                if(flag[i][j] == 1)
+                    check = 0, print_heading(map[i][j].h);
+                else if(flag[i][j] == 2 && check)
+                    printf("%c\033[0m",map[i][j].h.ch);
+                else if(flag[i][j] == 3)
+                {
+                    check = 0, print_heading(map[i][j].h);
+                    if(check) printf("\033[0m");
+                }
+                else printf("%c",map[i][j].h.ch);
+            }
+            if(id == 2) 
+            {
+                if(flag[i][j] == 1)
+                    check = 0, print_paragragh(map[i][j].p);
+                else if(flag[i][j] == 2 && check)
+                    printf("%c\033[0m",map[i][j].p.ch);
+                else if(flag[i][j] == 3)
+                {
+                    check = 0, print_paragragh(map[i][j].p);
+                    if(check) printf("\033[0m");
+                }
+                else printf("%c",map[i][j].p.ch);
+            }
+            if(id == 3) print_image(map[i][j].img);
         }
         puts("");
     }
@@ -510,13 +556,14 @@ void print()
 
 int main()
 {
-    // freopen("test_IO.in","r",stdin);
-    // freopen("test_IO.out","w",stdout);
+    freopen("test_IO.in","r",stdin);
+    freopen("test_IO.out","w",stdout);
     nD[0].id = 0, nD[0].element.height = 0, nD[0].element.width = 0, nD[0].tot = 0;
     read(0);
     nD[0].element.height = 10, nD[0].element.width = 50;
+    for(int i = 1;i <= totd; ++ i)
+        if(nD[i].element.width == 0 || nD[i].element.height == 0) nD[i].element.width = 0, nD[i].element.height = 0;
     draw(0,0,0,9,49);
     print();
-
     return 0;
 }
